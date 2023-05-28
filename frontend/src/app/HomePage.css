@@ -1,0 +1,13 @@
+.homepage-wrapper-container{
+    margin-top: 10%;
+    background-image: linear-gradient(to bottom,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.6)),url("/recruitment-cover-page.webp");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.padding-wrapper{
+    padding: 5% 0 5% 0;
+}
