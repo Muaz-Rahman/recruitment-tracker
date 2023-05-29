@@ -8,14 +8,17 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import Link from "next/link";
 import { Box } from "@mui/material";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function CandidatePage() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [candidateData, setCandidateData] = useState([] as any);
   const [lastInterviewResult, setLastInterviewResult] = useState("");
+  const router = useRouter();
+
   useEffect(() => {
     post("http://localhost:6001/candidatedetails", { id: id }).then((res) => {
       setCandidateData(res);
@@ -31,7 +34,12 @@ export default function CandidatePage() {
         Candidate Details
       </Typography>
       <Card
-        sx={{ maxWidth: "40%", mb: 2, ml: 5, bgcolor: "rgba(57, 14, 59, 0.1)" }}
+        sx={{
+          maxWidth: { md: "40%" },
+          mb: 2,
+          ml: { md: 5 },
+          bgcolor: "rgba(57, 14, 59, 0.1)",
+        }}
         variant="outlined"
         key={candidateData.id}
       >
@@ -46,7 +54,7 @@ export default function CandidatePage() {
             CV URL: <u>{candidateData.cv_url}</u>
           </Typography>
           {candidateData.Interviews
-            ? candidateData.Interviews.map((interview) => {
+            ? candidateData.Interviews.map((interview: any) => {
                 const feedbacks = interview.interview_feedback.split("\n");
                 return (
                   <div key={interview.interview_stage}>
@@ -73,7 +81,11 @@ export default function CandidatePage() {
           <Button
             size="small"
             variant="outlined"
-            onClick={() => console.log(candidateData)}
+            onClick={() =>
+              router.push(
+                `/existingcandidates/updateinterview?id=${candidateData.id}`
+              )
+            }
           >
             Edit Last Interview Information
           </Button>
@@ -81,6 +93,11 @@ export default function CandidatePage() {
             size="small"
             variant="contained"
             disabled={lastInterviewResult === "Pending"}
+            onClick={() =>
+              router.push(
+                `/existingcandidates/addinterviewstage?id=${candidateData.id}`
+              )
+            }
           >
             Add New Interview Stage
           </Button>

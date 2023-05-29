@@ -1,4 +1,5 @@
 "use client";
+
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -29,8 +30,9 @@ export default function ActiveCandidateList() {
       <Box sx={{ ml: 5, my: 5 }}>
         <Link href={"/"}>Go back to the main page</Link>
       </Box>
+
       <CenteredBox>
-        {candidateData.map((candidate) => {
+        {candidateData.map((candidate: any) => {
           const interview_result = candidate.Interviews[0].interview_result;
           return (
             <Card
@@ -59,14 +61,28 @@ export default function ActiveCandidateList() {
                   Interview Result: {interview_result}
                 </Typography>
               </CardContent>
+
               <CardActions>
-                <Button size="small" variant="outlined">
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() =>
+                    router.push(
+                      `/existingcandidates/updateinterview?id=${candidate.id}`
+                    )
+                  }
+                >
                   Edit Last Interview Information
                 </Button>
                 <Button
                   size="small"
                   variant="contained"
                   disabled={interview_result === "Pending"}
+                  onClick={() =>
+                    router.push(
+                      `/existingcandidates/addinterviewstage?id=${candidate.id}`
+                    )
+                  }
                 >
                   Add New Interview Stage
                 </Button>

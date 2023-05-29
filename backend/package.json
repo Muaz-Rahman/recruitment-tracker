@@ -14,6 +14,7 @@
     "express": "^4.18.2",
     "morgan": "~1.9.1",
     "nodemon": "^2.0.22",
+    "ordinal": "^1.0.3",
     "pg": "^8.11.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.31.1"

@@ -9,6 +9,7 @@ export default function CenteredBox({ children }: { children: ReactNode }) {
         flexDirection: "column",
         alignItems: "center",
         px: 1,
+        mb: 1,
       }}
     >
       {children}

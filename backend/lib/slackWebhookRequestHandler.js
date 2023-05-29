@@ -1,10 +1,12 @@
 const dotenv = require('dotenv')
-dotenv.config()
+const ordinal = require('ordinal')
 
+dotenv.config()
 const webhookUrl = process.env.SLACK_WEBHOOK_URL
 
-const slackWebhookRequestHandler = async (candidateName, role, cvUrl, result, interviewer, feedback, dateTime) => {
+const slackWebhookRequestHandler = async (candidateName, role, cvUrl, result, interviewer, feedback, dateTime, stage) => {
     const bulletedFeedback = feedback.replace(/\n/g, "\n• ")
+    const feedbackText = bulletedFeedback ? "Feedback:\n• " + bulletedFeedback : "Feedback:\n• No feedback was given"
     const slackMessageObject = {
         "blocks": [
             {
@@ -18,7 +20,7 @@ const slackWebhookRequestHandler = async (candidateName, role, cvUrl, result, in
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Applied for: " + role
+                    "text": "Applied For: " + role
                 }
             },
             {
@@ -32,7 +34,7 @@ const slackWebhookRequestHandler = async (candidateName, role, cvUrl, result, in
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Round 1 interview: " + result
+                    "text": ordinal(stage) + " Round Interview: " + result
                 }
             },
             {
@@ -46,7 +48,7 @@ const slackWebhookRequestHandler = async (candidateName, role, cvUrl, result, in
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": "Feedback:\n• " + bulletedFeedback
+                    "text": feedbackText
                 }
             },
             {
@@ -58,7 +60,7 @@ const slackWebhookRequestHandler = async (candidateName, role, cvUrl, result, in
             }
         ]
     }
-    await fetch(webhookUrl, {method: 'POST', body: JSON.stringify(slackMessageObject)})
+    await fetch(webhookUrl, { method: 'POST', body: JSON.stringify(slackMessageObject) })
 }
 
 module.exports = slackWebhookRequestHandler

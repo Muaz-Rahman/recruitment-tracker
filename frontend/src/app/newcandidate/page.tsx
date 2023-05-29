@@ -9,19 +9,18 @@ import {
   InputLabel,
   FormControl,
   FormHelperText,
-  Alert,
-  AlertTitle,
-  Snackbar,
 } from "@mui/material";
 import { newCandidateFormSchema } from "@/validations/newCandidateFormValidation";
 import { useFormik } from "formik";
 import { useState } from "react";
 import Link from "next/link";
 import CenteredBox from "@/components/CenteredBox";
+import AlertComponent from "@/components/AlertComponent";
 
 export default function AddNewCandidate() {
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState("Password or username is wrong");
+  const [successMessageOpen, setSuccessMessageOpen] = useState(false);
+  const [errorMessageOpen, setErrorMessageOpen] = useState(false);
+
   const handleClose = (
     event: React.SyntheticEvent<any> | Event,
     reason: string
@@ -29,9 +28,10 @@ export default function AddNewCandidate() {
     if (reason === "clickaway") {
       return;
     }
-    setOpen(false);
+    setSuccessMessageOpen(false);
+    setErrorMessageOpen(false);
   };
-  //TODO add alert
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -45,21 +45,31 @@ export default function AddNewCandidate() {
     validationSchema: newCandidateFormSchema,
 
     onSubmit: (values) => {
-      console.log(values);
-      fetch("http://localhost:6001/newcandidate", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      try {
+        fetch("http://localhost:6001/newcandidate", {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }).then((res) => {
+          if (res.status === 200) {
+            setSuccessMessageOpen(true);
+          } else {
+            setErrorMessageOpen(true);
+          }
+        });
+      } catch (err) {
+        setErrorMessageOpen(true);
+        console.log(err);
+      }
     },
   });
   return (
     <>
       <CenteredBox>
-        <h2>Adding a new candidate information</h2>
+        <h2>Add a new candidate information</h2>
         <Box
           component="form"
           method="post"
@@ -185,13 +195,20 @@ export default function AddNewCandidate() {
         <Link href={"/"}>Go back to the main page</Link>
       </CenteredBox>
 
-      <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
-        <Alert severity="success">
-          <AlertTitle>Success</AlertTitle>
-          Candidate information has been updated and slack update posted in the
-          channel
-        </Alert>
-      </Snackbar>
+      <AlertComponent
+        open={successMessageOpen}
+        handleClose={handleClose}
+        severity="success"
+        alertTitle="Success"
+        alertMessage="New interview information has been updated successfully!"
+      />
+      <AlertComponent
+        open={errorMessageOpen}
+        handleClose={handleClose}
+        severity="warning"
+        alertTitle="Error"
+        alertMessage="An unexpected error has occurred. Please try again later."
+      />
     </>
   );
 }

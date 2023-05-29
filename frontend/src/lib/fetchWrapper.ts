@@ -17,4 +17,17 @@ const post = async (url: string, body: Object) => {
   return data;
 };
 
-export { get, post };
+const put = async (url: string, body: Object) => {
+  const response = await fetch(url, {
+    method: "PUT",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await response.json();
+  return data;
+};
+
+export { get, post, put };
