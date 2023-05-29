@@ -21,6 +21,7 @@ pnpm dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 For running the app in build version instead of development, run:  
-``npx next build`` followed by  
+``npx next build``   
+followed by  
 ``npx next start``
 
